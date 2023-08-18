@@ -20,6 +20,11 @@ namespace Pagination.Controllers
         {
             return _userServices.CreateAllUsers(value);
         }
+        [HttpGet]
+        public List<User>GetUserByNam(string name)
+        {
+            return _userServices.GetUser(name);
+        }
 
     }
 }

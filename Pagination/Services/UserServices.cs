@@ -31,6 +31,11 @@ namespace Pagination.Services
             return Users;
         }
 
+        public List<User> GetUser(string FirstName)
+        {
+            var users = _connectMssql.users.Where(u => u.FirstName == FirstName).ToList();
+            return users;
+        }
         //public Product GetSingleProduct()
         //{
         //    Product product = ProductFaker.Generate();
