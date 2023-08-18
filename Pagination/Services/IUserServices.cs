@@ -5,6 +5,6 @@ namespace Pagination.Services
     public interface IUserServices
     {
         List<User> CreateAllUsers(int amountOfUsers);
-        List<User> GetUser(string FirstName);
+        List<User> GetUser(UserQuery userQuery);
     }
 }

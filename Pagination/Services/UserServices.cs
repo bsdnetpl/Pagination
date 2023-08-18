@@ -31,9 +31,13 @@ namespace Pagination.Services
             return Users;
         }
 
-        public List<User> GetUser(string FirstName)
+        public List<User> GetUser(UserQuery userQuery)
         {
-            var users = _connectMssql.users.Where(u => u.FirstName == FirstName).ToList();
+            var users = _connectMssql.users
+                .Where(u => u.FirstName.ToLower().Contains(userQuery.SearchPhrase.ToLower()))
+                .Skip(userQuery.PageSize * userQuery.PageNumber -1)
+                .Take(userQuery.PageSize)
+                .ToList();
             return users;
         }
         //public Product GetSingleProduct()
