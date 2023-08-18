@@ -21,7 +21,7 @@ namespace Pagination.Controllers
             return _userServices.CreateAllUsers(value);
         }
         [HttpGet]
-        public List<User> GetUserByNam([FromQuery] UserQuery userQuery)
+        public PageResult<User> GetUserByNam([FromQuery] UserQuery userQuery)
         {
             return _userServices.GetUser(userQuery);
         }
