@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿//using Bogus;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pagination.Models;
 using Pagination.Services;
@@ -10,10 +13,12 @@ namespace Pagination.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserServices _userServices;
+        private readonly IValidator<UserQuery> _validator;
 
-        public UserController(IUserServices userServices)
+        public UserController(IUserServices userServices, IValidator<UserQuery> validator)
         {
             _userServices = userServices;
+            _validator = validator;
         }
         [HttpPost]
         public List<User> CreatedUser(int value)
@@ -21,9 +26,15 @@ namespace Pagination.Controllers
             return _userServices.CreateAllUsers(value);
         }
         [HttpGet]
-        public PageResult<User> GetUserByNam([FromQuery] UserQuery userQuery)
+        public ActionResult<PageResult<User>> GetUserByNam([FromQuery] UserQuery userQuery)
         {
-            return _userServices.GetUser(userQuery);
+            ValidationResult result = _validator.Validate(userQuery);
+
+            if (result.IsValid)
+            {
+                return _userServices.GetUser(userQuery);
+            }
+            return BadRequest(result);
         }
 
     }

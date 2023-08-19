@@ -1,5 +1,8 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Pagination.DB;
+using Pagination.Middleware;
+using Pagination.Models;
 using Pagination.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,9 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ConnectMssql>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("CS")));
+builder.Services.AddScoped<IValidator<UserQuery>, UserQueryValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserQueryValidation>();
+builder.Services.AddScoped<Validation>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,7 +26,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<Validation>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -46,6 +46,9 @@ namespace Pagination.Services
             var result = new PageResult<User>(UserAll, totalUsers, userQuery.PageSize, userQuery.PageNumber);
             return result;
         }
+
+
+
         //public Product GetSingleProduct()
         //{
         //    Product product = ProductFaker.Generate();
