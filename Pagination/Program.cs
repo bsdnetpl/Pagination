@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ConnectMssql>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("CS")));
 builder.Services.AddScoped<IValidator<UserQuery>, UserQueryValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserQueryValidation>();
-builder.Services.AddScoped<Validation>();
+builder.Services.AddScoped<Validation>(); // remember  add this in controller: using FluentValidation.Results;
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
