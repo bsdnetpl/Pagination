@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Pagination.DB;
 using Pagination.Models;
+using System.Linq.Expressions;
 
 namespace Pagination.Services
 {
@@ -36,6 +37,23 @@ namespace Pagination.Services
             var users = _connectMssql.users
                 .Where(u => u.FirstName.ToLower().Contains(userQuery.SearchPhrase.ToLower()));
                 
+            if(!string.IsNullOrEmpty(userQuery.SortBy))
+            {
+                var columnSelection = new Dictionary<string, Expression<Func<User, object>>>()
+                {
+                    { nameof(User.FirstName), r => r.FirstName},
+                    { nameof(User.LastName), r => r.LastName},
+                    { nameof(User.Email), r => r.Email}
+
+                };
+
+                var selectedColumn = columnSelection[userQuery.SortBy];
+
+                users = userQuery.SortOrder == SortOrder.ASC
+                    ? users.OrderBy(selectedColumn)
+                    : users.OrderByDescending(selectedColumn);
+            }
+
             var UserAll = users
                 .Skip(userQuery.PageSize * userQuery.PageNumber - 1)
                 .Take(userQuery.PageSize)
